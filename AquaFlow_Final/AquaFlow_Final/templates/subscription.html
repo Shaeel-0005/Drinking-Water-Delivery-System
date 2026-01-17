@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription - Aqua Flow{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <h1>Monthly Subscription</h1>
+
+    {% if subscription %}
+    <div class="info-box">
+        <h3>Current Subscription</h3>
+        <p><strong>Bottle Type:</strong> {{ subscription.bottle_type }}</p>
+        <p><strong>Quantity:</strong> {{ subscription.quantity }}</p>
+        <p><strong>Monthly Price:</strong> Rs {{ "%.2f"|format(subscription.total_price) }}</p>
+    </div>
+    {% endif %}
+
+    {% if locations %}
+    <div class="form-container">
+        <h2>{% if subscription %}Update{% else %}Create{% endif %} Subscription</h2>
+        <form method="POST" action="{{ url_for('subscription') }}">
+            <div class="form-group">
+                <label for="bottle_type">Bottle Type</label>
+                <select id="bottle_type" name="bottle_type" required>
+                    <option value="">Select bottle type</option>
+                    <option value="2 Liter" {% if subscription and subscription.bottle_type=='2 Liter' %}selected{%
+                        endif %}>2 Liter - Rs 50</option>
+                    <option value="20 Liter" {% if subscription and subscription.bottle_type=='20 Liter' %}selected{%
+                        endif %}>20 Liter - Rs 200</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity (per month)</label>
+                <input type="number" id="quantity" name="quantity" min="1"
+                    value="{% if subscription %}{{ subscription.quantity }}{% else %}1{% endif %}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Delivery Location</label>
+                <div class="radio-group">
+                    {% for location in locations %}
+                    <label class="radio-label">
+                        <input type="radio" name="location_id" value="{{ location.id }}" {% if subscription and
+                            subscription.location_id==location.id %}checked{% elif location.is_default %}checked{% endif
+                            %} required>
+                        <span class="radio-text">
+                            <strong>{{ location.label }}</strong> - {{ location.address }}, {{ location.city }}
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">{% if subscription %}Update{% else %}Create{% endif %}
+                Subscription</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="info-box">
+        <p>You need to add a delivery location first.</p>
+        <a href="{{ url_for('locations') }}" class="btn btn-primary">Add Location</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

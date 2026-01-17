@@ -1,0 +1,34 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- 20 Liter Bottle (Dispenser Style) -->
+    <defs>
+        <linearGradient id="bigWaterGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#7dd3fc;stop-opacity:0.8" />
+            <stop offset="50%" style="stop-color:#bae6fd;stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#7dd3fc;stop-opacity:0.8" />
+        </linearGradient>
+    </defs>
+    
+    <!-- Main Body (Wider) -->
+    <rect x="25" y="35" width="50" height="60" rx="4" fill="url(#bigWaterGrad)" stroke="#0284c7" stroke-width="2"/>
+    
+    <!-- Grooves -->
+    <path d="M25,50 L75,50" stroke="#0284c7" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+    <path d="M25,65 L75,65" stroke="#0284c7" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+    <path d="M25,80 L75,80" stroke="#0284c7" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+    
+    <!-- Shoulder/Top -->
+    <path d="M25,35 L35,20 L65,20 L75,35 Z" fill="url(#bigWaterGrad)" stroke="#0284c7" stroke-width="2"/>
+    
+    <!-- Neck -->
+    <rect x="42" y="10" width="16" height="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+    
+    <!-- Cap (Larger) -->
+    <rect x="40" y="5" width="20" height="6" rx="2" fill="#0369a1" stroke="#0c4a6e"/>
+    
+    <!-- Handle Indication -->
+    <path d="M68,25 Q75,25 75,40" stroke="#0284c7" stroke-width="3" fill="none" opacity="0.5"/>
+    
+     <!-- Label -->
+    <circle cx="50" cy="60" r="12" fill="#f0f9ff" stroke="#0284c7" stroke-width="0.5" opacity="0.8"/>
+    <text x="50" y="64" font-family="Arial" font-size="10" text-anchor="middle" fill="#0284c7" font-weight="bold">20L</text>
+</svg>

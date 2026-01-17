@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Aqua Flow{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h1>Join AquaFlow</h1>
+        <p style="text-align: center; margin-bottom: 2rem; opacity: 0.8;">Create your account and start your hydration journey</p>
+        
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="name">👤 Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">📧 Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">📱 Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔒 Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a strong password">
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">🔐 Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <span>Create Account</span>
+            </button>
+        </form>
+
+        <p class="auth-link">
+            Already have an account? <a href="{{ url_for('login') }}">Sign in here</a>
+        </p>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); border-radius: 12px; border: 1px solid var(--success-color);">
+            <h4 style="margin-bottom: 1rem; color: var(--success-color); display: flex; align-items: center; gap: 0.5rem;">
+                <span>✨</span> Why Choose AquaFlow?
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🚚</span> Fast & reliable delivery
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>💧</span> Pure & tested water quality
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📱</span> Easy online ordering
+                </li>
+                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>💰</span> Affordable pricing
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

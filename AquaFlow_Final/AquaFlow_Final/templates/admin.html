@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Aqua Flow{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <h1>Admin Panel</h1>
+
+    <div style="margin-bottom: 20px;">
+        <form action="{{ url_for('clear_db') }}" method="POST"
+            onsubmit="return confirm('Are you sure you want to REFRESH the database? This will delete ALL users, orders, and data (except the Admin account). This action cannot be undone.');"
+            style="display: inline;">
+            <button type="submit" class="btn btn-delete">
+                Refresh Database
+            </button>
+        </form>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p class="stat-number">{{ users|length }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Orders</h3>
+            <p class="stat-number">{{ orders|length }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Revenue</h3>
+            <p class="stat-number">Rs {{ "%.2f"|format(total_revenue) }}</p>
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h2>All Users</h2>
+        {% if users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.role }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">No users registered yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="admin-section">
+        <h2>All Orders</h2>
+        {% if orders %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Address</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Bottle Type</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.user_name }}</td>
+                    <td>{{ order.address }}, {{ order.city }}</td>
+                    <td>
+                        {% if order.order_type == 'subscription' %}
+                        <span class="badge"
+                            style="background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px;">Sub</span>
+                        {% else %}
+                        <span class="badge"
+                            style="background: #fdf4ff; color: #86198f; padding: 2px 6px; border-radius: 4px;">Single</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ order.order_date[:16] }}</td>
+                    <td>{{ order.bottle_type }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>Rs {{ "%.2f"|format(order.total_price) }}</td>
+                    <td><span class="status status-{{ order.status }}">{{ order.status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">No orders placed yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

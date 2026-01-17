@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Place Order - Aqua Flow{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="hero-section" style="padding: 2rem 0;">
+        <h1 class="hero-title" style="font-size: 2.5rem;">💧 Place Your Order</h1>
+        <p class="hero-subtitle">Fresh, pure water delivered to your doorstep</p>
+    </div>
+
+    {% if locations %}
+    <div class="form-container">
+        <form method="POST" action="{{ url_for('order') }}" id="orderForm">
+            <!-- Bottle Selection -->
+            <div class="form-group">
+                <label style="font-size: 1.2rem; margin-bottom: 1.5rem; display: block;">🍼 Choose Your Bottle
+                    Type</label>
+                <div class="bottle-selector">
+                    <div class="bottle-option" onclick="selectBottle('2 Liter', 50, this)">
+                        <img src="{{ url_for('static', filename='images/bottle-small.svg') }}" alt="2L Bottle"
+                            class="bottle-img"
+                            style="width: 60px; height: 100px; margin-bottom: 0.5rem; transition: transform 0.3s;">
+                        <h3 class="bottle-title">2 Liter</h3>
+                        <p class="bottle-price">Rs 50</p>
+                        <p style="opacity: 0.7; margin-top: 0.5rem;">Perfect for personal use</p>
+                        <input type="radio" name="bottle_type" value="2 Liter" style="display: none;">
+                    </div>
+
+                    <div class="bottle-option" onclick="selectBottle('20 Liter', 200, this)">
+                        <img src="{{ url_for('static', filename='images/bottle-large.svg') }}" alt="20L Bottle"
+                            class="bottle-img"
+                            style="width: 100px; height: 120px; margin-bottom: 0.5rem; transition: transform 0.3s;">
+                        <h3 class="bottle-title">20 Liter</h3>
+                        <p class="bottle-price">Rs 200</p>
+                        <p style="opacity: 0.7; margin-top: 0.5rem;">Great for families</p>
+                        <input type="radio" name="bottle_type" value="20 Liter" style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quantity Selection -->
+            <div class="form-group">
+                <label for="quantity" style="font-size: 1.2rem;">📊 Quantity</label>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                    <button type="button" onclick="changeQuantity(-1)" class="btn btn-secondary"
+                        style="width: auto; padding: 0.5rem 1rem;">-</button>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1" required
+                        style="text-align: center; font-size: 1.2rem; font-weight: 600;">
+                    <button type="button" onclick="changeQuantity(1)" class="btn btn-secondary"
+                        style="width: auto; padding: 0.5rem 1rem;">+</button>
+                </div>
+            </div>
+
+            <!-- Location Selection -->
+            <div class="form-group">
+                <label style="font-size: 1.2rem; margin-bottom: 1rem; display: block;">📍 Delivery Location</label>
+                <div class="radio-group">
+                    {% for location in locations %}
+                    <label class="radio-label">
+                        <input type="radio" name="location_id" value="{{ location.id }}" {% if location.is_default
+                            %}checked{% endif %} required>
+                        <span class="radio-text">
+                            <strong style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span>🏠</span>{{ location.label }}
+                                {% if location.is_default %}<span
+                                    style="background: var(--success-color); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">Default</span>{%
+                                endif %}
+                            </strong>
+                            <span style="opacity: 0.8;">{{ location.address }}, {{ location.city }}</span>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary" id="orderSummary" style="display: none;">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Bottle Type:</span>
+                    <span id="summaryBottleType">-</span>
+                </div>
+                <div class="summary-row">
+                    <span>Quantity:</span>
+                    <span id="summaryQuantity">1</span>
+                </div>
+                <div class="summary-row">
+                    <span>Price per bottle:</span>
+                    <span id="summaryPrice">Rs 0</span>
+                </div>
+                <div class="summary-row">
+                    <span><strong>Total Amount:</strong></span>
+                    <span id="summaryTotal" style="color: var(--success-color); font-weight: 700;">Rs 0</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 2rem;">
+                <span>🛒 Place Order</span>
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <div class="info-box" style="text-align: center; padding: 3rem; border-radius: 16px;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">📍</div>
+        <h3 style="margin-bottom: 1rem; color: var(--text-color);">No delivery locations found</h3>
+        <p style="margin-bottom: 2rem; opacity: 0.8;">You need to add a delivery location first to place an order.</p>
+        <a href="{{ url_for('locations') }}" class="btn btn-primary" style="width: auto;">Add Location</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    let selectedPrice = 0;
+
+    function selectBottle(type, price, element) {
+        // Remove selected class from all options
+        document.querySelectorAll('.bottle-option').forEach(opt => opt.classList.remove('selected'));
+
+        // Add selected class to clicked option
+        element.classList.add('selected');
+
+        // Set the radio button
+        element.querySelector('input[type="radio"]').checked = true;
+
+        // Update price
+        selectedPrice = price;
+        updateSummary();
+
+        // Show order summary
+        document.getElementById('orderSummary').style.display = 'block';
+    }
+
+    function changeQuantity(delta) {
+        const quantityInput = document.getElementById('quantity');
+        let newValue = parseInt(quantityInput.value) + delta;
+        if (newValue < 1) newValue = 1;
+        quantityInput.value = newValue;
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const total = selectedPrice * quantity;
+
+        const selectedBottle = document.querySelector('.bottle-option.selected');
+        if (selectedBottle) {
+            document.getElementById('summaryBottleType').textContent = selectedBottle.querySelector('.bottle-title').textContent;
+        }
+
+        document.getElementById('summaryQuantity').textContent = quantity;
+        document.getElementById('summaryPrice').textContent = `Rs ${selectedPrice}`;
+        document.getElementById('summaryTotal').textContent = `Rs ${total}`;
+    }
+
+    // Update summary when quantity changes
+    document.getElementById('quantity').addEventListener('input', updateSummary);
+</script>
+{% endblock %}

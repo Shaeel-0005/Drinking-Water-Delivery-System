@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Aqua Flow{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1 class="hero-title">Welcome, {{ session.user_name }}! 👋</h1>
+        <p class="hero-subtitle">Your water delivery dashboard - Stay hydrated, stay healthy</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card water-wave">
+            <h3>Total Orders</h3>
+            <p class="stat-number">{{ total_orders }}</p>
+            <p style="opacity: 0.7; margin-top: 0.5rem;">Orders placed</p>
+        </div>
+
+        <div class="stat-card water-wave">
+            <h3>Total Spent</h3>
+            <p class="stat-number">Rs {{ "%.2f"|format(total_spent) }}</p>
+            <p style="opacity: 0.7; margin-top: 0.5rem;">Money invested in health</p>
+        </div>
+
+        <div class="stat-card water-wave">
+            <h3>Saved Locations</h3>
+            <p class="stat-number">{{ locations_count }}</p>
+            <p style="opacity: 0.7; margin-top: 0.5rem;">Delivery addresses</p>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="feature-grid">
+        <div class="feature-card">
+            <span class="feature-icon">🚚</span>
+            <h3 class="feature-title">Quick Order</h3>
+            <p class="feature-description">Place a new water bottle order in seconds</p>
+            <a href="{{ url_for('order') }}" class="btn btn-primary" style="margin-top: 1rem; width: auto;">Order
+                Now</a>
+        </div>
+
+        <div class="feature-card">
+            <span class="feature-icon">📍</span>
+            <h3 class="feature-title">Manage Locations</h3>
+            <p class="feature-description">Add or edit your delivery addresses</p>
+            <a href="{{ url_for('locations') }}" class="btn btn-secondary" style="margin-top: 1rem; width: auto;">View
+                Locations</a>
+        </div>
+
+        <div class="feature-card">
+            <span class="feature-icon">📋</span>
+            <h3 class="feature-title">Order History</h3>
+            <p class="feature-description">Track your past orders and deliveries</p>
+            <a href="{{ url_for('order_history') }}" class="btn btn-secondary"
+                style="margin-top: 1rem; width: auto;">View History</a>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="recent-orders">
+        <h2 style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <span style="font-size: 1.5rem;">📦</span>
+            Recent Orders
+        </h2>
+        {% if recent_orders %}
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>📅 Date</th>
+                        <th>🍼 Bottle Type</th>
+                        <th>📊 Quantity</th>
+                        <th>💰 Total Price</th>
+                        <th>📋 Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>{{ order.order_date[:16] }}</td>
+                        <td>
+                            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                                {% if order.bottle_type == '2 Liter' %}
+                                <img src="{{ url_for('static', filename='images/bottle-small.svg') }}"
+                                    class="inline-bottle" alt="2L">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='images/bottle-large.svg') }}"
+                                    class="inline-bottle" alt="20L">
+                                {% endif %}
+                                {{ order.bottle_type }}
+                            </span>
+                        </td>
+                        <td>{{ order.quantity }}</td>
+                        <td style="font-weight: 600; color: var(--success-color);">Rs {{
+                            "%.2f"|format(order.total_price) }}</td>
+                        <td><span class="status status-{{ order.status }}">{{ order.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="no-data"
+            style="text-align: center; padding: 3rem; background: var(--bg-color); border-radius: 12px; border: 2px dashed var(--border-color);">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">💧</div>
+            <h3 style="margin-bottom: 1rem; color: var(--text-color);">No orders yet!</h3>
+            <p style="margin-bottom: 2rem; opacity: 0.7;">Start your hydration journey today</p>
+            <a href="{{ url_for('order') }}" class="btn btn-primary" style="width: auto;">Place Your First Order</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

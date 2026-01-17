@@ -1,0 +1,28 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- 2 Liter Bottle -->
+    <defs>
+        <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#bae6fd;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#e0f2fe;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#bae6fd;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    
+    <!-- Body -->
+    <path d="M35,30 L65,30 L65,90 Q65,95 60,95 L40,95 Q35,95 35,90 Z" fill="url(#waterGrad)" stroke="#0ea5e9" stroke-width="2"/>
+    
+    <!-- Ribs/Grooves -->
+    <path d="M35,45 L65,45" stroke="#0ea5e9" stroke-width="1" stroke-opacity="0.3"/>
+    <path d="M35,60 L65,60" stroke="#0ea5e9" stroke-width="1" stroke-opacity="0.3"/>
+    <path d="M35,75 L65,75" stroke="#0ea5e9" stroke-width="1" stroke-opacity="0.3"/>
+    
+    <!-- Neck -->
+    <path d="M40,30 L43,20 L57,20 L60,30 Z" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+    
+    <!-- Cap -->
+    <rect x="42" y="15" width="16" height="6" rx="2" fill="#0284c7" stroke="#0369a1"/>
+    
+    <!-- Label -->
+    <rect x="35" y="50" width="30" height="15" fill="#f0f9ff" stroke="#0284c7" stroke-width="0.5" opacity="0.8"/>
+    <text x="50" y="60" font-family="Arial" font-size="6" text-anchor="middle" fill="#0284c7" font-weight="bold">2L</text>
+</svg>
