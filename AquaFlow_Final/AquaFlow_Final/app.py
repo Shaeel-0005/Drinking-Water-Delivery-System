@@ -679,7 +679,7 @@ if __name__ == '__main__':
     if not os.path.exists(DATABASE):
         init_db()
     
-    # MIGRATION: Ensure delivery_boy_id exists
+    # MIGRATION logic (your existing code stays)
     with app.app_context():
         db = get_db()
         try:
@@ -691,7 +691,6 @@ if __name__ == '__main__':
                 db.commit()
             except Exception as e: print(f"Migrate Error: {e}")
 
-        # MIGRATION: Ensure address and city exist in orders
         try:
             db.execute('SELECT address FROM orders LIMIT 1')
         except sqlite3.OperationalError:
@@ -702,7 +701,6 @@ if __name__ == '__main__':
                 db.commit()
             except Exception as e: print(f"Migrate Error: {e}")
 
-        # MIGRATION: Ensure last_generated_date exists in subscriptions
         try:
             db.execute('SELECT last_generated_date FROM subscriptions LIMIT 1')
         except sqlite3.OperationalError:
@@ -712,7 +710,8 @@ if __name__ == '__main__':
                 db.commit()
             except Exception as e: print(f"Migrate Error: {e}")
 
-        # Ensure users exist (handles admin, delivery, and VAN)
         init_db()
 
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Use Render's PORT environment variable
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
